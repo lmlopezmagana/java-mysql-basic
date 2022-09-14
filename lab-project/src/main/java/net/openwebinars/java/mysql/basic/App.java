@@ -11,11 +11,15 @@ public class App {
             jdbc:mysql://localhost/database?allowPublicKeyRetrieval=true&useSSL=false
             """;
 
+        Connection conn = null;
+        Statement stm = null;
+        ResultSet rs = null;
+
         try {
-            Connection conn = DriverManager.getConnection(url,"user", "password");
+            conn = DriverManager.getConnection(url,"user", "password");
             System.out.println("Conectado a la base de datos");
 
-            Statement stm = conn.createStatement();
+            stm = conn.createStatement();
 
             String sql = """
                     INSERT INTO alumno (nombre, apellidos, edad, email)
@@ -32,7 +36,7 @@ public class App {
                     SELECT * FROM alumno;
                     """;
 
-            ResultSet rs = stm.executeQuery(sql2);
+            rs = stm.executeQuery(sql2);
 
             while (rs.next()) {
                 System.out.println(String.format("%d. %s %s %d %s",
@@ -43,13 +47,44 @@ public class App {
                         rs.getString(5)));
             }
 
-
-            conn.close();
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("ErrorCode: " + ex.getErrorCode());
+        } finally {
+
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException ex) {}
+
+                rs = null;
+
+            }
+
+            if (stm != null) {
+                try {
+                    stm.close();
+                } catch (SQLException ex) {}
+
+                stm = null;
+            }
+
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {}
+                conn = null;
+            }
+
+
+
         }
+
+
+
+
+
     }
 
 }
