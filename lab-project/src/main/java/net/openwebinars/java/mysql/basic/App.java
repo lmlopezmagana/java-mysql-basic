@@ -1,8 +1,7 @@
 package net.openwebinars.java.mysql.basic;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
+import java.sql.*;
 
 public class App {
 
@@ -15,6 +14,20 @@ public class App {
         try {
             Connection conn = DriverManager.getConnection(url,"user", "password");
             System.out.println("Conectado a la base de datos");
+
+            Statement stm = conn.createStatement();
+
+            String sql = """
+                    INSERT INTO alumno (nombre, apellidos, edad, email)
+                    VALUES ('Sergio', 'Martínez del Campo', 25, 'serginho@gmail.com');
+                    """;
+
+            int n = stm.executeUpdate(sql);
+
+            if (n > 0)
+                System.out.println("Se ha insertado el registro en la base de datos");
+
+
             conn.close();
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
